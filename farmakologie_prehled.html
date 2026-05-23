@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmakologie - Přehled</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-hover: #0284c7;
+            --card-bg: rgba(30, 41, 59, 0.6);
+            --border: rgba(255, 255, 255, 0.1);
+            --sidebar-width: 320px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+            line-height: 1.6;
+            background-image: radial-gradient(circle at top right, rgba(56, 189, 248, 0.1), transparent 400px),
+                              radial-gradient(circle at bottom left, rgba(129, 140, 248, 0.1), transparent 400px);
+            background-attachment: fixed;
+        }
+
+        nav {
+            width: var(--sidebar-width);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border-right: 1px solid var(--border);
+            padding: 2.5rem 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        nav h2 {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            background: -webkit-linear-gradient(45deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav ul.menu-group {
+            margin-bottom: 2rem;
+        }
+
+        nav ul li.menu-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        nav ul li a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            display: block;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+
+        nav ul li a:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px);
+        }
+
+        main {
+            margin-left: var(--sidebar-width);
+            padding: 4rem 5rem;
+            width: calc(100% - var(--sidebar-width));
+            max-width: 1400px;
+        }
+
+        section {
+            margin-bottom: 5rem;
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        section:nth-child(1) { animation-delay: 0.1s; }
+        section:nth-child(2) { animation-delay: 0.2s; }
+        section:nth-child(3) { animation-delay: 0.3s; }
+        section:nth-child(4) { animation-delay: 0.4s; }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            color: #fff;
+        }
+
+        p.intro {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            line-height: 1.8;
+            background: rgba(56, 189, 248, 0.05);
+            padding: 1.5rem;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .drug-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+        }
+
+        .drug-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.25rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+        }
+
+        h2::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            margin-right: 12px;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        ul.details {
+            list-style: none;
+        }
+
+        ul.details li {
+            margin-bottom: 1rem;
+            color: #cbd5e1;
+            font-size: 1rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        ul.details li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        ul.details li strong {
+            color: #f8fafc;
+            font-weight: 600;
+            margin-right: 0.25rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 1024px) {
+            nav {
+                width: 250px;
+                padding: 2rem 1.5rem;
+            }
+            main {
+                margin-left: 250px;
+                padding: 3rem;
+                width: calc(100% - 250px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            nav {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                padding: 1.5rem;
+            }
+            main {
+                margin-left: 0;
+                width: 100%;
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h2>Obsah</h2>
+        
+        <ul class="menu-group">
+            <li class="menu-title"><a href="#ans" style="color: inherit; padding: 0; border: none; background: transparent; transform: none; display: inline;">1. ANS</a></li>
+            <li><a href="#ans-adrenalin">Adrenalin</a></li>
+            <li><a href="#ans-noradrenalin">Noradrenalin</a></li>
+            <li><a href="#ans-efedrin">Efedrin</a></li>
+            <li><a href="#ans-metoprolol">Metoprolol</a></li>
+            <li><a href="#ans-acetylcholin">Acetylcholin</a></li>
+            <li><a href="#ans-neostigmin">Neostigmin</a></li>
+            <li><a href="#ans-atropin">Atropin</a></li>
+            <li><a href="#ans-botulotoxin">Botulotoxin</a></li>
+        </ul>
+
+        <ul class="menu-group">
+            <li class="menu-title"><a href="#cytostatika" style="color: inherit; padding: 0; border: none; background: transparent; transform: none; display: inline;">2. Cytostatika</a></li>
+            <li><a href="#cyto-cyklofosfamid">Cyklofosfamid</a></li>
+            <li><a href="#cyto-cisplatina">Cisplatina</a></li>
+            <li><a href="#cyto-5fu">5-fluorouracil (5-FU)</a></li>
+            <li><a href="#cyto-methotrexat">Methotrexát</a></li>
+            <li><a href="#cyto-doxorubicin">Doxorubicin</a></li>
+            <li><a href="#cyto-vinblastin">Vinblastin</a></li>
+            <li><a href="#cyto-paklitaxel">Paklitaxel</a></li>
+        </ul>
+
+        <ul class="menu-group">
+            <li class="menu-title"><a href="#stitna-zlaza" style="color: inherit; padding: 0; border: none; background: transparent; transform: none; display: inline;">3. Štítná žláza</a></li>
+            <li><a href="#sz-levotyroxin">Levotyroxin</a></li>
+            <li><a href="#sz-liotyronin">Liotyronin</a></li>
+            <li><a href="#sz-jodid">Jodid draselný</a></li>
+            <li><a href="#sz-thiamazol">Thiamazol a Propylthiouracil</a></li>
+        </ul>
+
+        <ul class="menu-group">
+            <li class="menu-title"><a href="#radiofarmaka" style="color: inherit; padding: 0; border: none; background: transparent; transform: none; display: inline;">4. Radiofarmaka & Kontrast</a></li>
+            <li><a href="#rf-jod131">Jód 131 (131I)</a></li>
+            <li><a href="#rf-stroncium">Stroncium 89 & Samarium 153</a></li>
+            <li><a href="#rf-fluor18">Fluor 18 (18F) jako FDG</a></li>
+            <li><a href="#rf-baso4">BaSO4 (Síran barnatý)</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <!-- 1. ANS -->
+        <section id="ans">
+            <h1>1. Léčiva autonomního nervového systému (ANS)</h1>
+            <p class="intro">Tato kapitola pokrývá základní léčiva sympatiku a parasympatiku, se kterými se v praxi setkáváme především při řešení urgentních stavů, šoku, resuscitaci nebo u kardiologických pacientů.</p>
+
+            <div class="drug-card" id="ans-adrenalin">
+                <h2>Adrenalin (Epinefrin)</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Přímé, neselektivní sympatomimetikum (katecholamin).</li>
+                    <li><strong>Mechanismus účinku:</strong> Silně aktivuje alfa i beta receptory. Na rozdíl od noradrenalinu působí velmi silně i na beta-2 receptory.</li>
+                    <li><strong>Farmakodynamika:</strong> Zvyšuje srdeční výdej a tepovou frekvenci (beta-1), způsobuje vazokonstrikci v kůži a splanchniku (alfa-1), ale vazodilataci v kosterním svalstvu (beta-2). Dále způsobuje výraznou bronchodilataci (beta-2) a má protialergický/protianafylaktický účinek (stabilizuje žírné buňky).</li>
+                    <li><strong>Indikace:</strong> Zástava srdce (asystolie, KPR), anafylaktický šok (lék první volby!), těžký bronchospasmus, jako přísada do lokálních anestetik (k prodloužení účinku díky vazokonstrikci).</li>
+                    <li><strong>Nežádoucí účinky:</strong> Tachykardie, arytmie, hypertenzní špičky (krvácení do mozku), úzkost, třes, ischemie myokardu (zvyšuje spotřebu O2 v srdci).</li>
+                    <li><strong>Aplikace:</strong> Při resuscitaci i.v., při anafylaxi přednostně i.m. (EpiPen).</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="ans-noradrenalin">
+                <h2>Noradrenalin (Norepinefrin)</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Přímé sympatomimetikum, hlavní neurotransmiter sympatiku.</li>
+                    <li><strong>Mechanismus účinku:</strong> Silně aktivuje alfa-1 receptory a slaběji beta-1 receptory. Téměř nemá vliv na beta-2 receptory.</li>
+                    <li><strong>Farmakodynamika:</strong> Extrémně silná vazokonstrikce vedoucí k masivnímu zvýšení periferního odporu a krevního tlaku. V důsledku podráždění baroreceptorů vysokým tlakem dochází často k reflexní bradykardii (tepovka se může snížit nebo zůstat stejná).</li>
+                    <li><strong>Indikace:</strong> Lék první volby u šokových stavů spojených s těžkou hypotenzí (septický šok, distributivní šok) a k udržení perfuze u kardiogenního šoku.</li>
+                    <li><strong>Nežádoucí účinky:</strong> Závažná ischemie tkání (periferní i viscerální), nekróza při úniku mimo žílu (extravazaci), snížení prokrvení ledvin.</li>
+                    <li><strong>Aplikace:</strong> Přísně jako kontinuální i.v. infuze (nejlépe do CŽK), velmi krátký biologický poločas.</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="ans-efedrin">
+                <h2>Efedrin</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Nepřímé a přímé sympatomimetikum (rostlinný alkaloid).</li>
+                    <li><strong>Mechanismus účinku:</strong> Zvyšuje uvolňování endogenních katecholaminů ze zakončení nervů (nepřímý účinek) a navíc slabě stimuluje alfa i beta receptory přímo.</li>
+                    <li><strong>Farmakodynamika:</strong> Zvyšuje krevní tlak, působí pozitivně inotropně a chronotropně, vyvolává centrální stimulaci (psychostimulant) a bronchodilataci.</li>
+                    <li><strong>Indikace:</strong> Řešení perioperační hypotenze (např. při epidurální anestezii), dříve při astmatu, někdy u enurézy a narkolepsie.</li>
+                    <li><strong>Nežádoucí účinky:</strong> Nespavost, tachykardie, závislost. Efedrin je zneužíván jako prekurzor pro výrobu pervitinu.</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="ans-metoprolol">
+                <h2>Metoprolol</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Kardioselektivní beta-blokátor (beta-1 sympatolytikum).</li>
+                    <li><strong>Mechanismus účinku:</strong> Kompetitivně blokuje beta-1 receptory v srdci, čímž antagonizuje účinky endogenních katecholaminů.</li>
+                    <li><strong>Farmakodynamika:</strong> Snižuje tepovou frekvenci (negativně chronotropní), snižuje sílu stahu (negativně inotropní), snižuje dráždivost (antifibrilační efekt) a snižuje spotřebu O2 v myokardu.</li>
+                    <li><strong>Indikace:</strong> Hypertenze, ischemická choroba srdeční (angina pectoris), po infarktu myokardu, srdeční selhání, tachyarytmie.</li>
+                    <li><strong>Nežádoucí účinky:</strong> Bradykardie, hypotenze, únava. Přestože je selektivní, ve vysokých dávkách může blokovat i beta-2 a způsobit bronchospasmus (pozor u astmatiků).</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="ans-acetylcholin">
+                <h2>Acetylcholin</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Endogenní neurotransmiter parasympatiku a nervosvalové ploténky.</li>
+                    <li><strong>Mechanismus účinku:</strong> Váže se na muskarinové receptory (M) v parasympatiku a na nikotinové receptory (N) na nervosvalové ploténce a v gangliích.</li>
+                    <li><strong>Farmakodynamika:</strong> Vyvolává kontrakci kosterních svalů (přes N), zúžení zornic, slinění, zpomalení srdce, kontrakci střev (přes M).</li>
+                    <li><strong>Poznámka:</strong> V klinice se jako lék téměř nevyužívá kvůli extrémně krátkému poločasu (okamžitě rozkládán enzymem acetylcholinesterázou v synaptické štěrbině).</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="ans-neostigmin">
+                <h2>Neostigmin</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Nepřímé parasympatomimetikum (inhibitor acetylcholinesterázy).</li>
+                    <li><strong>Mechanismus účinku:</strong> Reverzibilně blokuje enzym acetylcholinesterázu, čímž brání rozkladu acetylcholinu. Hromadění acetylcholinu pak zesiluje jeho účinek na receptorech.</li>
+                    <li><strong>Indikace:</strong> Myasthenia gravis (zlepšuje svalovou sílu), pooperační atonie střev a retence moči (nastartuje motilitu), antidotum nedepolarizujících svalových relaxancií.</li>
+                    <li><strong>Nežádoucí účinky:</strong> Přemíra parasympatické aktivity – bradykardie, křeče břicha, průjem, nadměrné slinění a pocení.</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="ans-atropin">
+                <h2>Atropin</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Přímé parasympatolytikum (alkaloid z rulíku zlomocného).</li>
+                    <li><strong>Mechanismus účinku:</strong> Kompetitivní antagonista na muskarinových receptorech. Blokuje účinky acetylcholinu.</li>
+                    <li><strong>Farmakodynamika:</strong> Způsobuje tachykardii, mydriázu (rozšíření zornice), tlumí sekreci (sucho v ústech, bez pocení), snižuje motilitu střev.</li>
+                    <li><strong>Indikace:</strong> Těžká bradykardie (resuscitace), premedikace před anestezií (snížení sekrece v dýchacích cestách), křeče GIT, otrava inhibitory acetylcholinesterázy (organofosfáty, neostigmin) a otrava houbami s muskarinem.</li>
+                    <li><strong>Nežádoucí účinky:</strong> Tachykardie, sucho v ústech, retence moči, zácpa, zvýšení nitroočního tlaku (kontraindikován u glaukomu).</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="ans-botulotoxin">
+                <h2>Botulotoxin</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Periferní svalové myorelaxans (bakteriální neurotoxin).</li>
+                    <li><strong>Mechanismus účinku:</strong> Ireverzibilně štěpí proteiny zajišťující fúzi váčků (SNARE komplex), čímž zabraňuje presynaptickému uvolňování acetylcholinu na nervosvalové ploténce.</li>
+                    <li><strong>Farmakodynamika:</strong> Vyvolává chabou svalovou obrnu v místě aplikace. Účinek nastupuje za několik dní a trvá měsíce, dokud nerv neopraví svá zakončení.</li>
+                    <li><strong>Indikace:</strong> Dystonie, tortikolis, blefarospasmus, hemifaciální spasmus, těžká spasticita po CMP, kosmetika (mimické vrásky), nadměrné pocení.</li>
+                    <li><strong>Nežádoucí účinky:</strong> Ptóza očního víčka, slabost okolních svalů, při průniku do krve riziko celkového botulismu (zástava dechu).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 2. Cytostatika -->
+        <section id="cytostatika">
+            <h1>2. Cytostatika a protinádorová léčiva</h1>
+            <p class="intro">Tato skupina léčiv narušuje buněčný cyklus, zabraňuje dělení buněk a indukuje jejich apoptózu. Jsou toxická i pro zdravé, rychle se dělící tkáně (kostní dřeň, sliznice GIT, vlasové folikuly), což vysvětluje jejich typické nežádoucí účinky jako alopecie, myelotoxicita nebo emetogenita (zvracení).</p>
+
+            <div class="drug-card" id="cyto-cyklofosfamid">
+                <h2>Cyklofosfamid</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Alkylující látka (dusíkatý yperit).</li>
+                    <li><strong>Mechanismus účinku:</strong> Jedná se o proléčivo (aktivováno v játrech). Vytváří kovalentní vazby s bázemi DNA (alkylace), což způsobuje zlomy a křížové vazby (cross-linking) mezi vlákny. Tím blokuje replikaci a transkripci, vedoucí k zástavě buněčného cyklu.</li>
+                    <li><strong>Indikace:</strong> Hematologické malignity, solidní nádory, a jako silné imunosupresivum při těžkých autoimunitách.</li>
+                    <li><strong>Nežádoucí účinky:</strong> Myelotoxicita, silná GIT toxicita (emetogen). Zásadní komplikací je hemoragická cystitida (urotoxicita vyvolaná toxickým metabolitem akroleinem).</li>
+                    <li><strong>Antidotum:</strong> K záchraně sliznice močového měchýře se preventivně i terapeuticky podává Mesna (váže akrolein).</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="cyto-cisplatina">
+                <h2>Cisplatina</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Derivát platiny (působí podobně jako alkylující látky).</li>
+                    <li><strong>Mechanismus účinku:</strong> Platina se váže na guaniny v DNA a tvoří vnitro- a mezivláknové můstky. To naruší strukturu šroubovice a buněčný cyklus končí apoptózou.</li>
+                    <li><strong>Indikace:</strong> Karcinomy CNS, žaludku, jícnu, varlat, ovarií, plic a močového měchýře.</li>
+                    <li><strong>Nežádoucí účinky:</strong> Je to extrémně silný emetogen (pacienti silně zvrací, podávají se profylakticky antiemetika). Hlavním rizikem je nefrotoxicita (poškození ledvin). Pacient musí být masivně hydratován.</li>
+                    <li><strong>Antidotum/Prevence:</strong> Hydratační režim + Amifostin (chrání ledviny). Dále vyvolává ototoxicitu (poškození sluchu).</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="cyto-5fu">
+                <h2>5-fluorouracil (5-FU)</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Antimetabolit pyrimidinu.</li>
+                    <li><strong>Mechanismus účinku:</strong> Slouží jako falešný substrát. V buňce inhibuje klíčový enzym thymidylátsyntetázu, čímž brání tvorbě nukleotidů pro DNA. Tím zastavuje syntézu DNA a způsobuje apoptózu.</li>
+                    <li><strong>Indikace:</strong> Kolorektální karcinom (základní léčba), nádory žaludku, jícnu, karcinom prsu.</li>
+                    <li><strong>Nežádoucí účinky:</strong> Myelosuprese, GIT toxicita, neurotoxicita, syndrom "ruka-noha" (zčervenání a olupování kůže dlaní a plosek).</li>
+                    <li><strong>Zajímavost:</strong> Jeho účinek se zesiluje podáním kyseliny folinové (Leukovorin), která stabilizuje vazbu 5-FU na enzym. Některá antimykotika (Flucytosin) se v těle přeměňují právě na 5-fluorouracil.</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="cyto-methotrexat">
+                <h2>Methotrexát</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Antimetabolit kyseliny listové.</li>
+                    <li><strong>Mechanismus účinku:</strong> Inhibuje enzym dihydrofolátreduktázu (DHFR). Kyselina listová se nemůže přeměnit na aktivní formu (THF) potřebnou pro syntézu nukleotidů, takže buňka nemůže tvořit DNA ani RNA.</li>
+                    <li><strong>Indikace:</strong> Hematologické malignity. Navíc patří mezi DMARDs (chorobu modifikující léky) a v malých dávkách funguje jako imunosupresivum při autoimunitních chorobách (revmatoidní artritida, těžká lupénka/psoriáza).</li>
+                    <li><strong>Nežádoucí účinky:</strong> Nefrotoxicita, pneumotoxicita (fibróza plic), hepatotoxicita.</li>
+                    <li><strong>Antidotum:</strong> Při toxicitě nebo podání vysokých dávek se musí provést záchrana pomocí Leukovorinu (kyselina folinová), který poskytne buňkám aktivní folát.</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="cyto-doxorubicin">
+                <h2>Doxorubicin</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Antracyklinové antibiotikum (topoisomerázový inhibitor a interkalátor).</li>
+                    <li><strong>Mechanismus účinku:</strong> Má trojí efekt – 1. Vmezeří se přímo mezi páry bází DNA (interkalace). 2. Inhibuje enzym topoisomerázu II (DNA se nemůže rozmotat pro kopírování). 3. Tvoří reaktivní formy kyslíku (ROS), které ničí DNA.</li>
+                    <li><strong>Indikace:</strong> Hodgkinův lymfom, leukémie, karcinom prsu a mnoho dalších solidních nádorů.</li>
+                    <li><strong>Nežádoucí účinky:</strong> Středně silný emetogen, myelotoxicita. Typickým a fatálním NÚ je kardiotoxicita (tvorba radikálů v srdci vede k chronickému nevratnému srdečnímu selhání – má kumulativní celoživotní max. dávku).</li>
+                    <li><strong>Antidotum:</strong> K ochraně srdce před radikály se podává Dexrazoxan. Moč může být po léčbě zbarvená do červena.</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="cyto-vinblastin">
+                <h2>Vinblastin</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Inhibitor polymerizace mikrotubulů (Vinca alkaloid - z barvínku).</li>
+                    <li><strong>Mechanismus účinku:</strong> Váže se na tubulin a brání jeho spojování (polymerizaci). Následkem toho se nevytvoří dělicí vřeténko a buňka se zastaví ve fázi dělení (mitóze) a zanikne.</li>
+                    <li><strong>Indikace:</strong> Lymfomy, karcinomy prsu a varlat.</li>
+                    <li><strong>Nežádoucí účinky:</strong> Myelotoxicita, silná zánětlivost sliznic (mukositida GIT), alopecie a významná periferní neurotoxicita (brnění končetin, poruchy citlivosti). Působí silně puchýřkovitě při extravazaci!</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="cyto-paklitaxel">
+                <h2>Paklitaxel</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Inhibitor depolarizace mikrotubulů (Taxan - z tisu).</li>
+                    <li><strong>Mechanismus účinku:</strong> Působí opačně než Vinblastin. Váže se na tubulin a silně podporuje jeho polymerizaci, ale zabraňuje jeho rozpadu (depolarizaci). Dělicí vřeténko "zamrzne" a chromozomy se nemohou rozestoupit, což zastaví mitózu.</li>
+                    <li><strong>Indikace:</strong> Karcinom prsu, ovarií, plic.</li>
+                    <li><strong>Nežádoucí účinky:</strong> Myelosupresivní, neurotoxický účinek, těžké mukositidy, ztráta vlasů. Způsobuje časté a silné alergické reakce (pacient musí být premedikován kortikoidy a antihistaminiky).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 3. Štítná žláza -->
+        <section id="stitna-zlaza">
+            <h1>3. Léčiva ovlivňující štítnou žlázu</h1>
+            <p class="intro">Tato skupina zahrnuje léčbu nedostatku hormonů (hypotyreóza), jejich nadbytku (hypertyreóza) a ochranu žlázy. Štítná žláza produkuje z jódu a tyrosinu hormony T4 (tyroxin) a T3 (trijodtyronin), které regulují bazální metabolismus.</p>
+
+            <div class="drug-card" id="sz-levotyroxin">
+                <h2>Levotyroxin</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Syntetický hormon štítné žlázy (T4).</li>
+                    <li><strong>Mechanismus účinku:</strong> Působí jako exogenní náhrada přirozeného tyroxinu. V cílových tkáních se přeměňuje na účinnější T3. Tím nahrazuje chybějící funkci žlázy a zrychluje buněčný metabolismus.</li>
+                    <li><strong>Indikace:</strong> Terapie první volby pro hypotyreózu jakékoliv etiologie (Hashimotova tyreoiditida, stav po strumektomii nebo ablaci radiojódem).</li>
+                    <li><strong>Farmakokinetika:</strong> Podává se perorálně (obvykle 1x denně ráno nalačno), má dlouhý biologický poločas (cca 7 dní).</li>
+                    <li><strong>Nežádoucí účinky:</strong> Vznikají pouze při předávkování, čímž vznikne farmakologická hypertyreóza (tachykardie, nervozita, třes, úbytek na váze, nespavost).</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="sz-liotyronin">
+                <h2>Liotyronin</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Syntetický hormon štítné žlázy (T3).</li>
+                    <li><strong>Mechanismus účinku:</strong> Syntetická forma aktivního trijodtyroninu (T3). Tělo ho nemusí konvertovat jako T4, proto působí napřímo a velmi rychle.</li>
+                    <li><strong>Indikace:</strong> Urgentní stavy spojené s těžkou hypotyreózou (myxedémové koma). Nepoužívá se k dlouhodobé udržovací léčbě, protože má krátký biologický poločas a způsobuje příliš velké výkyvy v krvi.</li>
+                    <li><strong>Nežádoucí účinky:</strong> Stejné jako u Levotyroxinu, ale nastupují rychleji a silněji (riziko akutního přetížení srdce – tachykardie, palpitace).</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="sz-jodid">
+                <h2>Jodid draselný</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Jodové preparáty.</li>
+                    <li><strong>Mechanismus účinku:</strong> 1. Ve fyziologických dávkách (stopové) léčí nedostatek jódu (endemická struma). 2. Ve velkých dávkách akutně inhibuje syntézu a uvolňování hormonů ze žlázy (tzv. Wolff-Chaikoffův efekt), tento účinek však po 10-15 dnech samovolně vyprchá. 3. Působí kompetitivně s radioaktivními izotopy jódu.</li>
+                    <li><strong>Indikace:</strong> Prevence radiace! Pokud dojde k úniku radioaktivního jódu do prostředí, podání velké dávky Jodidu draselného "zahltí" transportní mechanismy štítné žlázy. Žláza se plně nasytí neškodným jódem a nedokáže už přijmout škodlivý radioaktivní izotop z potravy nebo vzduchu, čímž se zamezí jejímu ozáření a vzniku karcinomu. Dále se podává ke zklidnění žlázy před chirurgickým zákrokem.</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="sz-thiamazol">
+                <h2>Thiamazol a Propylthiouracil</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Thyreostatika (thioamidy).</li>
+                    <li><strong>Mechanismus účinku:</strong> 1. Tlumí syntézu hormonů kompetitivní inhibicí enzymu tyreoperoxidázy. Tento enzym v buňkách žlázy za normálních okolností zabudovává jód do tyrosinu, čímž tvoří T3 a T4. Thioamidy tomuto zabudování zabrání. 2. Propylthiouracil navíc částečně brání přeměně T4 na T3 v periferních tkáních.</li>
+                    <li><strong>Indikace:</strong> Léčba hypertyreózy (Basedowova choroba, tyreotoxická krize). Slouží ke zklidnění metabolismu pacienta.</li>
+                    <li><strong>Nežádoucí účinky:</strong> Alergické reakce (vyrážky). Nejobávanějším a život ohrožujícím účinkem je agranulocytóza (granulocytopenie) – zástava tvorby bílých krvinek v kostní dřeni vedoucí k smrtelným infekcím.</li>
+                    <li><strong>Způsob podání:</strong> Perorální dlouhodobá léčba, účinek nastupuje s prodlevou, protože se nejprve musí spotřebovat hormony již uložené ve štítné žláze.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 4. Radiofarmaka -->
+        <section id="radiofarmaka">
+            <h1>4. Radiofarmaka a Kontrastní látky</h1>
+            <p class="intro">Tato kapitola je specificky zaměřená pro obor radiologie a radioterapie. Popisuje radionuklidy používané v diagnostice (např. v PET) i v terapii (k cílenému ničení tkání nebo úlevě od bolesti), a kontrastní látky pro rentgenová vyšetření.</p>
+
+            <div class="drug-card" id="rf-jod131">
+                <h2>Jód 131 (131I)</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Terapeutické radiofarmakum (zářič beta a gama).</li>
+                    <li><strong>Mechanismus účinku:</strong> Po perorálním podání se chová jako běžný jód – koluje v krvi, a je velmi specificky vychytáván výhradně buňkami štítné žlázy. Zde je inkorporován do proteinu thyreoglobulinu ve folikulech. 131I emituje oba typy záření:
+                        <br>- Záření beta (β): Má velmi krátký dosah v tkáni (1-2 mm), takže nevychází ven z orgánu. Ve folikulech působí silně cytotoxicky a vyvolává cílenou destrukci (nekrózu) zhoubného nebo hyperaktivního parenchymu štítné žlázy, aniž by poškodil okolní orgány.
+                        <br>- Záření gama (γ): Proniká ven z těla pacienta a slouží jako diagnostický marker (lékaři pomocí gama kamery ověří distribuci léčiva v těle a případné metastázy).
+                    </li>
+                    <li><strong>Indikace:</strong> Terapie rakoviny štítné žlázy a léčba refrakterní hypertyreózy. Pacient musí být dočasně izolován kvůli radiaci gama.</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="rf-stroncium">
+                <h2>Stroncium 89 (89Sr) a Samarium 153 (153Sm)</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Střednědobé radionuklidy pro paliativní péči (především zářiče beta).</li>
+                    <li><strong>Mechanismus účinku:</strong> Jedná se o osteotropní látky, to znamená, že se chovají chemicky podobně jako vápník. Po injekčním podání se vychytávají přednostně v oblastech se zvýšeným kostním obratem (což je právě v místech, kde rakovina metastazuje do kostí – např. z karcinomu prostaty nebo prsu).</li>
+                    <li><strong>Indikace:</strong> Paliativní (úlevová) péče. Jsou určeny pro zmírnění silných a neztišitelných bolestí u pacientů s mnohočetnými kostními metastázemi.</li>
+                    <li><strong>Farmakodynamika:</strong> Jejich záření cíleně zničí část nervových zakončení a zánětlivé/tumorózní tkáně v místě metastázy, což významně snižuje bolest.</li>
+                    <li><strong>Poznámky:</strong> 89Sr má delší poločas rozpadu a delší nástup i trvání účinku než 153Sm. U obou hrozí útlum kostní dřeně.</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="rf-fluor18">
+                <h2>Fluor 18 (18F) ve formě FDG</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Krátkodobý nuklid, diagnostické radiofarmakum pro PET (Pozitronová emisní tomografie).</li>
+                    <li><strong>Mechanismus účinku:</strong> Je to pozitivní (β+) zářič, který podléhá anihilaci. Základní molekulou je FDG (fluorodeoxyglukóza). Funguje jako analog glukózy, který rychle rostoucí (tumorózní) a zanícené buňky lačně vstřebávají přes receptory pro glukózu (GLUT). Na rozdíl od běžné glukózy se ale FDG po vstupu do buňky dále nemetabolizuje a hromadí se v ní. Rozpadem 18F vznikají pozitrony, které po srážce s elektronem anihilují za vzniku dvou gama paprsků letících proti sobě (180°), což zachytí prstenec PET skeneru.</li>
+                    <li><strong>Indikace:</strong> Vyhledávání nádorů, staging rakoviny, hledání metastáz a sledování odpovědi na protinádorovou léčbu. Dále hodnocení viability srdečního svalu po infarktu a funkční vyšetření mozku.</li>
+                    <li><strong>Nevýhody:</strong> Velmi krátký poločas rozpadu (cca 110 minut), látka musí být vyrobena v cyklotronu těsně před aplikací. Zářič má vysoké nároky na radiační ochranu.</li>
+                </ul>
+            </div>
+
+            <div class="drug-card" id="rf-baso4">
+                <h2>BaSO4 (Síran barnatý)</h2>
+                <ul class="details">
+                    <li><strong>Zařazení:</strong> Pozitivní kontrastní látka.</li>
+                    <li><strong>Mechanismus účinku:</strong> Baryum je těžký prvek, který silně absorbuje rentgenové záření (mnohem více než měkké tkáně pacienta). Na rtg snímku se tak zobrazuje jako sytě bílé "zastínění". Síran barnatý je zcela nerozpustný ve vodě, nevstřebává se do krevního oběhu a zůstává pouze v lumen (dutině).</li>
+                    <li><strong>Indikace:</strong> Zobrazovací vyšetření trávicí trubice – polykací akt jícnu, pasáž žaludkem a střevy (např. pomocí klyzmatu s dvojím kontrastem pro zobrazení reliéfu sliznice tlustého střeva).</li>
+                    <li><strong>Nežádoucí účinky a rizika:</strong> Zácpa, bolesti břicha. Pokud je střevní pasáž zpomalená, může dojít k zahuštění síranu a tvorbě tvrdých konkrementů (fekalomů) vedoucích až k mechanické neprůchodnosti střev.</li>
+                    <li><strong>Absolutní kontraindikace:</strong> Při podezření na perforaci trávicí trubice (proděravění) se baryum nesmí podat! Únik síranu barnatého do břišní dutiny způsobuje těžkou, život ohrožující baryovou peritonitidu. V takovém případě se používají vodou rozpustné jodové KL.</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+</body>
+</html>
